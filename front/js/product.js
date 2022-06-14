@@ -5,6 +5,11 @@
        return parameterList.get(key)
 }
   
-    // Gets the value associated with the key "id"
-    console.log(getParameter("id"))
-    
+    // Get the value associated with the key "id"
+    var idItem = getParameter("id");
+
+
+    // Get the product data from the back associated to the "id"
+    fetch('http://localhost:3000/api/products/'+idItem)
+        .then(resp => resp.json())
+        .then(resp2 => console.log(resp2))
