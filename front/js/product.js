@@ -37,6 +37,7 @@
                     const itemDescription = document.getElementById("description")
                     itemDescription.innerText = dataId.description;  
                     
+                    // Modify DOM and create the option for colors
                     for (const color of dataId.colors) {
                         const itemColorsBloc = document.getElementById("colors");
                         const itemColors = document.createElement("option");
