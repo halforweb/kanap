@@ -1,4 +1,4 @@
-        document.addEventListener('DOMContentLoaded', ()=>{
+      
             
             // Function to get the url parameter of the specified key
             getParameter = (key) => {
@@ -49,4 +49,13 @@
             
                //Call the function that will automatically run renderProduct() also 
                fetchDataId();
-            })
+
+              
+              
+               
+
+              
+
+
+
+

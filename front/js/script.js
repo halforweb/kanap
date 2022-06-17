@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', ()=>{
+
     function fetchData() {
         fetch('http://localhost:3000/api/products')
         .then(resp => resp.json())
@@ -33,4 +33,3 @@ document.addEventListener('DOMContentLoaded', ()=>{
     
        //Call the function that will automatically run renderProducts() also 
        fetchData();
-    })
