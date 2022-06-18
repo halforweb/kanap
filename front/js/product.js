@@ -23,7 +23,7 @@
             
                     // Modify DOM and insert img details
                     const itemImgBloc = document.querySelector(".item__img");
-                    const itemImg = document.createElement("img")
+                    const itemImg = document.createElement("img");
                     itemImg.src = dataId.imageUrl;
                     itemImg.alt = dataId.altTxt;
                     itemImgBloc.appendChild(itemImg);
@@ -47,7 +47,55 @@
                         itemColorsBloc.appendChild(itemColors);
                     }
                }
- 
+
+               
+              function dataCheck (){
+              let x = false;
+              let y = false;
+              const button = document.getElementById("addToCart");
+              button.setAttribute('disabled', '');
+              
+              const select = document.querySelector('select');
+              select.addEventListener('change', function handleChange(event) {
+                 if (event.target.value != "") {
+                  x = true;
+                  console.log(x);
+                 } else {
+                  x = false;
+                  alert("selectionner une couleur");
+                  console.log(x);
+                 }
+               });
+              
+              const quant = document.getElementById("quantity");
+              quant.addEventListener("input", function(e) {
+                if (e.target.value >=1 && e.target.value <=100) {
+                  y = true;
+                  console.log(y);
+                } else {
+                  y = false;
+                  alert("quantité invalide, la quantité est comprise entre 1 et 100");
+                  console.log(y);
+                }
+              });
+
+               button.addEventListener("click", function() {
+                    if(x == true && y == true){
+                      button.removeAttribute('disabled');
+                      console.log("ca fonctionne")
+                    } else {alert("completer tous les champs pour ajouter le produit au panier");
+                      console.log("ca ne fonctionne pas")
+                    }
+                   
+                });
+                
+              }
+
+              
+               
+               
+
+
      //******************************************************************************* Add product in the card  ********************************************************** */       
    
                // Save the product selected in local storage
@@ -65,18 +113,18 @@
                                 quantitySelectedProduct: document.getElementById("quantity").value,
                                 };
 
-                            // Control the product details selected
-                            if (selectedProduct.quantitySelectedProduct > 100 || selectedProduct.quantitySelectedProduct < 1 ) {
-                                alert('Veuillez renseigner une quantité entre 1 et 100');
-                                }
-                            else if (selectedProduct.colorSelectedProduct == "") { 
-                                    alert("Veuillez selectionner une couleur");
-                                }
-
+                          
                             // Create the local storage
                             let selectedProductArray = JSON.parse(localStorage.getItem("selectedProduct"));
 
-                            
+                            // Control the product details selected
+                            if (selectedProduct.quantitySelectedProduct > 100 || selectedProduct.quantitySelectedProduct < 1 ) {
+                                alert('Veuillez renseigner une quantité entre 1 et 100');
+                            }
+                            else if (selectedProduct.colorSelectedProduct == "") { 
+                                alert("Veuillez selectionner une couleur");
+                            }
+
                             // Amend the local storage if there is no product
                             if (selectedProductArray == null) { 
                                 selectedProductArray = [];
@@ -120,6 +168,7 @@
 
 //Call the functions 
     fetchDataId();
+    dataCheck();
     addToCard();
               
 
