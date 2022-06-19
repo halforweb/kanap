@@ -48,128 +48,84 @@
                     }
                }
 
-               
-              function dataCheck (){
-              let x = false;
-              let y = false;
-              const button = document.getElementById("addToCart");
-              button.setAttribute('disabled', '');
-              
-              const select = document.querySelector('select');
-              select.addEventListener('change', function handleChange(event) {
-                 if (event.target.value != "") {
-                  x = true;
-                  console.log(x);
-                 } else {
-                  x = false;
-                  alert("selectionner une couleur");
-                  console.log(x);
-                 }
-               });
-              
-              const quant = document.getElementById("quantity");
-              quant.addEventListener("input", function(e) {
-                if (e.target.value >=1 && e.target.value <=100) {
-                  y = true;
-                  console.log(y);
-                } else {
-                  y = false;
-                  alert("quantité invalide, la quantité est comprise entre 1 et 100");
-                  console.log(y);
-                }
-              });
-
-               button.addEventListener("click", function() {
-                    if(x == true && y == true){
-                      button.removeAttribute('disabled');
-                      console.log("ca fonctionne")
-                    } else {alert("completer tous les champs pour ajouter le produit au panier");
-                      console.log("ca ne fonctionne pas")
-                    }
-                   
-                });
-                
-              }
-
-              
-               
-               
-
-
-     //******************************************************************************* Add product in the card  ********************************************************** */       
+//******************************************************************************* Add product in the card  ********************************************************** */       
    
-               // Save the product selected in local storage
-                function addToCard() {
+            // Save the product selected in local storage
+            function addToCard() {
 
-                    // Check the button click "add to card"
+                    // Check the button click "add to card" and control the product details selected
                     const button = document.getElementById("addToCart");
-                          button.addEventListener("click", function () {
-
+                    button.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    let productColor = document.getElementById("colors").value;
+                    let productQuantity = parseInt(document.getElementById("quantity").value);
                 
-                            // Define the product details
-                            const selectedProduct = {
-                                idSelectedProduct: idItem,
-                                colorSelectedProduct: document.getElementById("colors").value,
-                                quantitySelectedProduct: document.getElementById("quantity").value,
-                                };
-
-                          
-                            // Create the local storage
-                            let selectedProductArray = JSON.parse(localStorage.getItem("selectedProduct"));
-
-                            // Control the product details selected
-                            if (selectedProduct.quantitySelectedProduct > 100 || selectedProduct.quantitySelectedProduct < 1 ) {
-                                alert('Veuillez renseigner une quantité entre 1 et 100');
-                            }
-                            else if (selectedProduct.colorSelectedProduct == "") { 
-                                alert("Veuillez selectionner une couleur");
-                            }
-
-                            // Amend the local storage if there is no product
-                            if (selectedProductArray == null) { 
-                                selectedProductArray = [];
-                                selectedProductArray.push(selectedProduct);
-                                localStorage.setItem("selectedProduct", JSON.stringify(selectedProductArray));
-                                alert("Produit ajouté au panier !");
-                            }
-                            // Amend the local storage if there is existing product
-                            else if (selectedProductArray != null) {
-            
-                                // Check the local storage
-                                let findProducts = selectedProductArray.find((element) =>
-                                        element.idSelectedProduct === selectedProduct.idSelectedProduct
-                                        &&
-                                        element.colorSelectedProduct === selectedProduct.colorSelectedProduct
-                                );
-            
-                                // if there is an existing product with same ID and Color, increment quantity to the local storage  
-                                if (findProducts) {
-            
-                                    let newQuantity = parseInt(findProducts.quantitySelectedProduct) + parseInt(selectedProduct.quantitySelectedProduct);
-                                    findProducts.quantitySelectedProduct = newQuantity;
-                                    if(newQuantity > 100) {
-                                        newQuantity = 100;
-                                    }
-                                    localStorage.setItem("selectedProduct", JSON.stringify(selectedProductArray));
-                                    alert(`${findProducts.quantitySelectedProduct} exemplaire(s) de ce produit sont dans le panier`)
-                                }
-            
-                                // if there is no existing product with the same ID and color, the new product is added to the local storage
-                                else {
-                                    selectedProductArray.push(selectedProduct);
-                                    localStorage.setItem("selectedProduct", JSON.stringify(selectedProductArray));
-                                    alert(`${selectedProduct.quantitySelectedProduct} exemplaire(s) de ce produit ajouté(s) au panier !`)
-                                }
-                            }
-                        }
-                        )                       
+                    // if no color is selected
+                    if (productColor == "") {
+                      alert("Veuillez sélectionner une couleur");
+                      return;
+                    }
+                    // if quantity is not defined between 1 and 100
+                    if (productQuantity == 0) {
+                      alert("Veuillez renseigner une quantité");
+                      return;
+                   } 
+                    else if (productQuantity > 100) {
+                      alert("La quantité maximale autorisée est de 100");
+                      return;
                    }
 
+                    // Define the product details
+                    const selectedProduct = {
+                        idSelectedProduct: idItem,
+                        colorSelectedProduct: productColor,
+                        quantitySelectedProduct: productQuantity,
+                        };
+
+                    // Create the local storage
+                    let selectedProductArray = JSON.parse(localStorage.getItem("selectedProduct"));
+
+                    // Amend the local storage if there is no product
+                    if (selectedProductArray == null) { 
+                        selectedProductArray = [];
+                        selectedProductArray.push(selectedProduct);
+                        localStorage.setItem("selectedProduct", JSON.stringify(selectedProductArray));
+                        alert("Produit ajouté au panier !");
+                        }
+                    // Amend the local storage if there is existing product
+                    else if (selectedProductArray != null) {
+        
+                            // Check the local storage
+                            let findProducts = selectedProductArray.find((element) =>
+                                    element.idSelectedProduct === selectedProduct.idSelectedProduct
+                                    &&
+                                    element.colorSelectedProduct === selectedProduct.colorSelectedProduct
+                            );
+        
+                            // if there is an existing product with same ID and Color, increment quantity to the local storage  
+                            if (findProducts) {
+                                let newQuantity = parseInt(findProducts.quantitySelectedProduct) + parseInt(selectedProduct.quantitySelectedProduct);
+                                findProducts.quantitySelectedProduct = newQuantity;
+                                if(newQuantity > 100) {
+                                    newQuantity = 100;
+                                }
+                                localStorage.setItem("selectedProduct", JSON.stringify(selectedProductArray));
+                                alert(`${findProducts.quantitySelectedProduct} exemplaire(s) de ce produit sont dans le panier`)
+                            }
+        
+                            // if there is no existing product with the same ID and color, the new product is added to the local storage
+                            else {
+                                selectedProductArray.push(selectedProduct);
+                                localStorage.setItem("selectedProduct", JSON.stringify(selectedProductArray));
+                                alert("Produit ajouté au panier !")
+                            }
+                        }
+                });                       
+               }
 
 //Call the functions 
-    fetchDataId();
-    dataCheck();
-    addToCard();
+fetchDataId();
+addToCard();
               
 
 
