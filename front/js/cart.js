@@ -28,7 +28,7 @@ async function displayCart() {
             let productDivImg = document.createElement("div");
             productDivImg.className = "cart__item__img";
             productArticle.appendChild(productDivImg);
-            
+
             // Insert Image
             let productImg = document.createElement("img");
             productImg.src = product.imageUrl;
@@ -57,7 +57,7 @@ async function displayCart() {
 
             // Insertion price
             let productPrice = document.createElement("p");
-            productPrice.innerHTML = product.price + " €";
+            productPrice.innerHTML = "Prix unitaire: " + product.price + " €";
             productItemContentTitlePrice.appendChild(productPrice);
 
             // Insert div with className "cart__item__content__settings"
@@ -96,14 +96,24 @@ async function displayCart() {
             productSupprimer.innerHTML = "Supprimer";
             productItemContentSettingsDelete.appendChild(productSupprimer);
         }
-    }
 
-
-    //Get the products details from the Back
-    async function getProduct(Id) {
-        let res = await fetch("http://localhost:3000/api/products/" + Id)
-        return res.json();
+        // Display the total quantity and total price
+        let totalQuantity = 0;
+        let totalPrice = 0;
+        for (i = 0; i < productLocalStorage.length; i++) {
+            const article = await getProduct(productLocalStorage[i].idSelectedProduct);
+            totalQuantity += parseInt(productLocalStorage[i].quantitySelectedProduct);
+            totalPrice += parseInt(article.price * productLocalStorage[i].quantitySelectedProduct);
+        }
+        document.getElementById("totalQuantity").innerHTML = totalQuantity;
+        document.getElementById("totalPrice").innerHTML = totalPrice;
     }
+}
+
+//Get the products details from the Back
+async function getProduct(Id) {
+    let res = await fetch("http://localhost:3000/api/products/" + Id)
+    return res.json();
 }
 
 
