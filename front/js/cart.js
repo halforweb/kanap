@@ -108,16 +108,73 @@ async function displayCart() {
         document.getElementById("totalQuantity").innerHTML = totalQuantity;
         document.getElementById("totalPrice").innerHTML = totalPrice;
     }
+    modifyCartQuantity();
+    deleteProduct();
 }
 
-//Get the products details from the Back
+//Function to get the products details from the Back
 async function getProduct(Id) {
     let res = await fetch("http://localhost:3000/api/products/" + Id)
     return res.json();
 }
 
+//Function to change the card quantities
+function modifyCartQuantity() {
+    let quantityInput = document.querySelectorAll(".itemQuantity");
+
+    for (let j = 0; j < quantityInput.length; j++) {
+        quantityInput[j].addEventListener("change", (event) => {
+            event.preventDefault();
+
+            if (quantityInput[j].valueAsNumber > 100 || quantityInput[j].valueAsNumber < 1) {
+                alert("La quantité doit être comprise entre 1 et 100");
+                location.reload();
+            }
+            else {
+
+                //Select the item to modify
+                let existingQuantity = productLocalStorage[j].quantitySelectedProduct;
+                let newQuantity = quantityInput[j].valueAsNumber;
+
+                //Amend the local storage with the new quantity
+                const findProduct = productLocalStorage.find((element) => element.newQuantity !== existingQuantity);
+                findProduct.quantitySelectedProduct = newQuantity;
+                productLocalStorage[j].quantitySelectedProduct = findProduct.quantitySelectedProduct;
+                localStorage.setItem("selectedProduct", JSON.stringify(productLocalStorage));
+
+                //Refresh the page
+                alert("la quantité a bien été changée");
+                location.reload();
+            }
+        })
+    }
+}
+
+// Function to delete a product from the card
+function deleteProduct() {
+    let btn_delete = document.querySelectorAll(".deleteItem");
+
+    for (let k = 0; k < btn_delete.length; k++){
+        btn_delete[k].addEventListener("click" , (event) => {
+            event.preventDefault();
+
+            //Select the item to delete based on id and color
+            let idDelete = productLocalStorage[k].idSelectedProduct;
+            let colorDelete = productLocalStorage[k].colorSelectedProduct;
+            productLocalStorage = productLocalStorage.filter( element => element.idSelectedProduct !== idDelete || element.colorSelectedProduct !== colorDelete );
+            localStorage.setItem("selectedProduct", JSON.stringify(productLocalStorage));
+
+            //Confirmation message product has been deleted
+            alert("Ce produit a bien été supprimé du panier");
+            location.reload();
+        })
+    }
+}
+
 
 //Call the functions 
 displayCart();
+
+
 
 
